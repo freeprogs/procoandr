@@ -150,10 +150,69 @@ $src_name_small to $dst_name_small and $src_name_exact to $dst_name_exact"
     return 0
 }
 
+resources_remove_files()
+{
+    rm -rf "$1" &>/dev/null
+}
+
+resources_copy_files()
+{
+    cp -R "$1" "$2" &>/dev/null
+}
+
+resources_replace_names()
+{
+    local dpath
+    local files_list
+    local fname
+    local fpath
+
+    dpath=$1
+    files_list=("menu/menu_main.xml"
+                "values/strings.xml"
+                "navigation/nav_graph.xml")
+
+    for fname in "${files_list[@]}"; do
+        fpath="$dpath/$fname"
+        sed -i 's/'"$2"'/'"$3"'/g' "$fpath" &>/dev/null
+        sed -i 's/'"$4"'/'"$5"'/g' "$fpath" &>/dev/null
+    done
+}
+
 copy_resources()
 {
-    echo "Copy resources in $1 to $2"
-    echo "Replace name from $1 to $2 and from $3 to $4"
+    local src_name_exact
+    local src_name_small
+    local dst_name_exact
+    local dst_name_small
+    local src_path_to_resources
+    local dst_path_to_resources
+
+    src_name_exact=$1
+    dst_name_exact=$2
+    src_name_small=$3
+    dst_name_small=$4
+
+    src_path_to_resources="${src_name_exact}/app/src/main/res"
+    dst_path_to_resources="${dst_name_exact}/app/src/main/res"
+
+    resources_remove_files "$dst_path_to_resources" || {
+        error "Can't remove resources files in destination: $dst_path_to_resources"
+        return 1
+    }
+    resources_copy_files "$src_path_to_resources" "$dst_path_to_resources" || {
+        error "Can't copy resources files from source to destination: \
+$src_path_to_resources to $dst_path_to_resources"
+        return 1
+    }
+    resources_replace_names "$dst_path_to_resources" \
+                            "$src_name_small" "$dst_name_small" \
+                            "$src_name_exact" "$dst_name_exact" || {
+        error "Can't replace project name in resources files: \
+$src_name_small to $dst_name_small and $src_name_exact to $dst_name_exact"
+        return 1
+    }
+    return 0
 }
 
 copy_libraries()
