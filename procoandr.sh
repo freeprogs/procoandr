@@ -225,10 +225,30 @@ $src_name_small to $dst_name_small and $src_name_exact to $dst_name_exact"
     return 0
 }
 
+libraries_copy_files()
+{
+    cp "$1"/* "$2" &>/dev/null
+}
+
 copy_libraries()
 {
-    echo "Copy libraries in $1 to $2"
-    echo "Replace name from $1 to $2 and from $3 to $4"
+    local src_name_exact
+    local dst_name_exact
+    local src_path_to_libraries
+    local dst_path_to_libraries
+
+    src_name_exact=$1
+    dst_name_exact=$2
+
+    src_path_to_libraries="${src_name_exact}/app/libs"
+    dst_path_to_libraries="${dst_name_exact}/app/libs"
+
+    libraries_copy_files "$src_path_to_libraries" "$dst_path_to_libraries" || {
+        error "Can't copy libraries files from source to destination: \
+$src_path_to_libraries to $dst_path_to_libraries"
+        return 1
+    }
+    return 0
 }
 
 copy_project_to_new_project()
@@ -270,8 +290,7 @@ copy_project_to_new_project()
         return 1
     }
 
-    copy_libraries "$src_name_exact" "$dst_name_exact" \
-                   "$src_name_small" "$dst_name_small" || {
+    copy_libraries "$src_name_exact" "$dst_name_exact" || {
         error "Can't copy libraries"
         return 1
     }
