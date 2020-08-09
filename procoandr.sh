@@ -32,9 +32,25 @@ help_info()
     echo "usage: $progname srcdir dstdir" >&2
 }
 
+get_small_name()
+{
+    echo -n "${1,,}"
+}
+
 copy_project_to_new_project()
 {
-    echo "Copy $1 to $2"
+    local src_name_exact
+    local src_name_small
+    local dst_name_exact
+    local dst_name_small
+
+    src_name_exact="$1"
+    src_name_small=`get_small_name $src_name_exact`
+    dst_name_exact="$2"
+    dst_name_small=`get_small_name $dst_name_exact`
+
+    echo "Copy exact names $src_name_exact to $dst_name_exact"
+    echo "Copy small names $src_name_small to $dst_name_small"
 }
 
 main()
