@@ -313,7 +313,8 @@ main()
         return 1
         ;;
     2)
-        copy_project_to_new_project "$1" "$2"
+        copy_project_to_new_project "$1" "$2" || return 1
+        msg "$1 has copied to $2 -> Ok"
         ;;
     *)
         usage
