@@ -91,10 +91,63 @@ $src_name_small to $dst_name_small"
     return 0
 }
 
+javafiles_remove_files()
+{
+    rm -f "$1/"*.java &>/dev/null
+}
+
+javafiles_copy_files()
+{
+    cp "$1/"*.java "$2" &>/dev/null
+}
+
+javafiles_replace_names()
+{
+    local dpath
+    local fpath
+
+    dpath=$1
+
+    for fpath in "$dpath/"*.java; do
+        sed -i 's/'"$2"'/'"$3"'/g' "$fpath" &>/dev/null
+        sed -i 's/'"$4"'/'"$5"'/g' "$fpath" &>/dev/null
+    done
+}
+
 copy_java_files()
 {
-    echo "Copy Java-files in $1 to $2"
-    echo "Replace name from $1 to $2 and from $3 to $4"
+    local src_name_exact
+    local src_name_small
+    local dst_name_exact
+    local dst_name_small
+    local src_path_to_javafiles
+    local dst_path_to_javafiles
+
+    src_name_exact=$1
+    dst_name_exact=$2
+    src_name_small=$3
+    dst_name_small=$4
+
+    src_path_to_javafiles="${src_name_exact}/app/src/main/java/com/example/${src_name_small}/"
+    dst_path_to_javafiles="${dst_name_exact}/app/src/main/java/com/example/${dst_name_small}/"
+
+    javafiles_remove_files "$dst_path_to_javafiles" || {
+        error "Can't remove Java-files in destination: $dst_path_to_javafiles"
+        return 1
+    }
+    javafiles_copy_files "$src_path_to_javafiles" "$dst_path_to_javafiles" || {
+        error "Can't copy Java-files from source to destination: \
+$src_path_to_javafiles to $dst_path_to_javafiles"
+        return 1
+    }
+    javafiles_replace_names "$dst_path_to_javafiles" \
+                            "$src_name_small" "$dst_name_small" \
+                            "$src_name_exact" "$dst_name_exact" || {
+        error "Can't replace project name in Java-files: \
+$src_name_small to $dst_name_small and $src_name_exact to $dst_name_exact"
+        return 1
+    }
+    return 0
 }
 
 copy_resources()
