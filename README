@@ -1,6 +1,6 @@
 Procoandr - PROject COpy for ANDRoid SDK
 
-Copies Java-files and resourse files from one Android project to a new
+Copies Java-files and resource files from one Android project to a new
 Android project.
 
 A developer can continue develop a project making its full copy as a
