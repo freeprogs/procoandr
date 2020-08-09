@@ -1,6 +1,16 @@
 #!/bin/bash
 
-# This script
+# This file is a part of procoandr v0.0.0
+#
+# Copy Java-files and resource files from one Android project to a
+# new Android project.
+#
+# A developer can continue develop a project making its full copy as a
+# completely new project with same Java-sorces, layouts, libraries and
+# pictures.
+#
+# License: GPLv3 http://www.gnu.org/licenses/
+# Copyright (C) 2020, Slava freeprogs.feedback@yandex.ru
 
 progname=`basename $0`
 
