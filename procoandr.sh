@@ -42,6 +42,30 @@ check_dir_existence()
     [ -d "$1" ]
 }
 
+copy_manifest()
+{
+    echo "Copy manifest in $1 to $2"
+    echo "Replace name from $1 to $2 and from $3 to $4"
+}
+
+copy_java_files()
+{
+    echo "Copy Java-files in $1 to $2"
+    echo "Replace name from $1 to $2 and from $3 to $4"
+}
+
+copy_resources()
+{
+    echo "Copy resources in $1 to $2"
+    echo "Replace name from $1 to $2 and from $3 to $4"
+}
+
+copy_libraries()
+{
+    echo "Copy libraries in $1 to $2"
+    echo "Replace name from $1 to $2 and from $3 to $4"
+}
+
 copy_project_to_new_project()
 {
     local src_name_exact
@@ -63,8 +87,31 @@ copy_project_to_new_project()
         return 1
     }
 
-    echo "Copy exact names $src_name_exact to $dst_name_exact"
-    echo "Copy small names $src_name_small to $dst_name_small"
+    copy_manifest "$src_name_exact" "$dst_name_exact" \
+                  "$src_name_small" "$dst_name_small" || {
+        error "Can't copy manifest"
+        return 1
+    }
+
+    copy_java_files "$src_name_exact" "$dst_name_exact" \
+                    "$src_name_small" "$dst_name_small" || {
+        error "Can't copy Java-files"
+        return 1
+    }
+
+    copy_resources "$src_name_exact" "$dst_name_exact" \
+                   "$src_name_small" "$dst_name_small" || {
+        error "Can't copy resources"
+        return 1
+    }
+
+    copy_libraries "$src_name_exact" "$dst_name_exact" \
+                   "$src_name_small" "$dst_name_small" || {
+        error "Can't copy libraries"
+        return 1
+    }
+
+    return 0
 }
 
 main()
