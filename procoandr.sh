@@ -42,10 +42,53 @@ check_dir_existence()
     [ -d "$1" ]
 }
 
+manifest_remove_file()
+{
+    rm -f "$1" &>/dev/null
+}
+
+manifest_copy_file()
+{
+    cp "$1" "$2" &>/dev/null
+}
+
+manifest_replace_names()
+{
+    sed -i 's/'"$2"'/'"$3"'/g' "$1" &>/dev/null
+}
+
 copy_manifest()
 {
-    echo "Copy manifest in $1 to $2"
-    echo "Replace name from $1 to $2 and from $3 to $4"
+    local src_name_exact
+    local src_name_small
+    local dst_name_exact
+    local dst_name_small
+    local src_path_to_manifest
+    local dst_path_to_manifest
+
+    src_name_exact=$1
+    dst_name_exact=$2
+    src_name_small=$3
+    dst_name_small=$4
+
+    src_path_to_manifest="${src_name_exact}/app/src/main/AndroidManifest.xml"
+    dst_path_to_manifest="${dst_name_exact}/app/src/main/AndroidManifest.xml"
+
+    manifest_remove_file "$dst_path_to_manifest" || {
+        error "Can't remove the manifest file in destination: $dst_path_to_manifest"
+        return 1
+    }
+    manifest_copy_file "$src_path_to_manifest" "$dst_path_to_manifest" || {
+        error "Can't copy the manifest file from source to destination: \
+$src_path_to_manifest to $dst_path_to_manifest"
+        return 1
+    }
+    manifest_replace_names "$dst_path_to_manifest" "$src_name_small" "$dst_name_small" || {
+        error "Can't replace project name in manifest: \
+$src_name_small to $dst_name_small"
+        return 1
+    }
+    return 0
 }
 
 copy_java_files()
