@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# This file is a part of procoandr v0.0.0
+# This file is a part of procoandr v1.0.0
 #
 # Copy Java-files and resource files from one Android project to a
 # new Android project.
