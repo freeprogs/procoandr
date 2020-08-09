@@ -37,6 +37,11 @@ get_small_name()
     echo -n "${1,,}"
 }
 
+check_dir_existence()
+{
+    [ -d "$1" ]
+}
+
 copy_project_to_new_project()
 {
     local src_name_exact
@@ -48,6 +53,15 @@ copy_project_to_new_project()
     src_name_small=`get_small_name $src_name_exact`
     dst_name_exact="$2"
     dst_name_small=`get_small_name $dst_name_exact`
+
+    check_dir_existence "$src_name_exact" || {
+        error "Can't find the source directory: $src_name_exact"
+        return 1
+    }
+    check_dir_existence "$dst_name_exact" || {
+        error "Can't find the destination directory: $dst_name_exact"
+        return 1
+    }
 
     echo "Copy exact names $src_name_exact to $dst_name_exact"
     echo "Copy small names $src_name_small to $dst_name_small"
