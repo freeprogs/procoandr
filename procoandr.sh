@@ -22,17 +22,45 @@ msg()
 # usage()
 usage()
 {
-    echo "usage: $progname " >&2
+    echo "Try \`$progname --help' for more information." >&2
+}
+
+# Print program help info to stderr
+# help_info()
+help_info()
+{
+    echo "usage: $progname srcdir dstdir" >&2
+}
+
+copy_project_to_new_project()
+{
+    echo "Copy $1 to $2"
 }
 
 main()
 {
     case $# in
-      0) usage; return 1;;
-      1)  "$1" && return 0;;
-      2)  "$1" "$2" && return 0;;
-      *) error "unknown arglist: \"$*\""; return 1;;
+    0)
+        usage || return 1
+        ;;
+    1)
+        [ "$1" = "--help" ] && {
+            help_info
+            return 1
+        }
+        usage
+        return 1
+        ;;
+    2)
+        copy_project_to_new_project "$1" "$2"
+        ;;
+    *)
+        usage
+        error "unknown arglist: \"$*\""
+        return 1
+        ;;
     esac
+    return 0
 }
 
 main "$@" || exit 1
