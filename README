@@ -4,5 +4,5 @@ Copies Java-files and resource files from one Android project to a new
 Android project.
 
 A developer can continue develop a project making its full copy as a
-completely new project with same Java-sorces, layouts, libraries and
+completely new project with same Java-sources, layouts, libraries and
 pictures.

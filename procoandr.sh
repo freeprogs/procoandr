@@ -6,8 +6,8 @@
 # new Android project.
 #
 # A developer can continue develop a project making its full copy as a
-# completely new project with same Java-sorces, layouts, libraries and
-# pictures.
+# completely new project with same Java-sources, layouts, libraries
+# and pictures.
 #
 # License: GPLv3 http://www.gnu.org/licenses/
 # Copyright (C) 2020, Slava freeprogs.feedback@yandex.ru
